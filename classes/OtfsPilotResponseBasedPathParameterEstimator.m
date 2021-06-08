@@ -89,10 +89,10 @@ classdef OtfsPilotResponseBasedPathParameterEstimator < matlab.System
                     estDopplerShift = exp(1i*2*pi*estDoppler*(Ncp-delay)/((M+Ncp)*N));
                     estInitialPhase = crosscorrvec(largestidx)/abs(crosscorrvec(largestidx))*estDopplerShift^-1;
 
-                    estGains = [estGains estGain];
-                    estDopplers = [estDopplers estDoppler];
-                    estDelays = [estDelays delay];
-                    estPhaseOffsets = [estPhaseOffsets angle(estInitialPhase)];
+                    estGains = [estGains; estGain];
+                    estDopplers = [estDopplers; estDoppler];
+                    estDelays = [estDelays; delay];
+                    estPhaseOffsets = [estPhaseOffsets; angle(estInitialPhase)];
 
 %                     % Check estimated paths
 %                     figure; clf;
