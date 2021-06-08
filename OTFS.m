@@ -82,6 +82,7 @@ fprintf("Channel profile: %s\n", channelModel);
 
 %---- Channel Coding ----
 channelCoding = 'LTE';
+% channelCoding = 'None';
 fprintf("Channel coding: %s\n", channelCoding);
 
 %% %%%%%%%%%%%%%%%%%%%%%%% OBJECT GENERATION %%%%%%%%%%%%%%%%%%%%%%% %%
@@ -219,7 +220,7 @@ hAwgn = AwgnChannel('N0');
 %% %%%%%%%%%%%%%%%%%%%%%%% SIMULATION SETTINGS %%%%%%%%%%%%%%%%%%%%%%% %%
 % Create an empty storage to store simulation status
 snrRange = 10:2:30; % in dB
-simIterations = 20000 * ones(1,length(snrRange));
+simIterations = 1000 * ones(1,length(snrRange));
 
 simstatus = table;  % use table-type variable since it's good to see in the workspace
 simstatus.SNR = snrRange';
@@ -304,10 +305,15 @@ for snrdb = snrRange
         % Bit Generation
         txBits = hBitGenerator.generate();
 %         txBits = zeros(size(txBits));  % FOR TEST
-        % Channel Encoding
-        txCodedBits = hChannelCoder.encode(txBits);
-        % Scrambler
-        txScrampledBits = hScrambler.scramble(txCodedBits);
+        switch channelCoding
+            case 'None'
+                txScrampledBits = txBits;
+            case 'LTE'
+                % Channel Encoding
+                txCodedBits = hChannelCoder.encode(txBits);
+                % Scrambler
+                txScrampledBits = hScrambler.scramble(txCodedBits);
+        end
         % Symbol Mapping (QAM modulation)
         txSymbols = hSymbolMapper.map(txScrampledBits);
 
@@ -359,11 +365,22 @@ for snrdb = snrRange
         rxSymbols = rxEqBlocks(:);
         % Symbol Demapping
         rxSoftBits = hSymbolMapper.demap(rxSymbols, noiseVar);
-        rxUncodedHardBits = hSymbolMapperUncoded.demap(rxSymbols);
-        % Descrambling
-        rxDescrambledBits = hScrambler.descramble(rxSoftBits);
         % Channel Decoding
-        [rxHardBits, blockError] = hChannelCoder.decode(rxDescrambledBits);
+        switch channelCoding
+            case 'None'
+                rxUncodedHardBits = rxSoftBits;
+                rxHardBits = rxUncodedHardBits;
+                if sum(xor(txBits, rxHardBits)) > 0
+                    blockError = 1;
+                else
+                    blockError = 0;
+                end
+            case 'LTE'
+                rxUncodedHardBits = hSymbolMapperUncoded.demap(rxSymbols);
+                % Descrambling
+                rxDescrambledBits = hScrambler.descramble(rxSoftBits);
+                [rxHardBits, blockError] = hChannelCoder.decode(rxDescrambledBits);
+        end
         
         %% Result
         % Bit Error Rate
