@@ -2,7 +2,7 @@
 
 This is a code package of the following scientific paper:
 
-- N. Hashimoto, N. Osawa, K. Yamazaki and S. Ibi, "Channel Estimation and Equalization for CP-OFDM-based OTFS in Fractional Doppler Channels," 2021 IEEE International Conference on Communications Workshops (ICC Workshops), 2021, pp. 1-7, doi: 10.1109/ICCWorkshops50388.2021.9473532.
+- N. Hashimoto, N. Osawa, K. Yamazaki and S. Ibi, "[*Channel Estimation and Equalization for CP-OFDM-based OTFS in Fractional Doppler Channels*](https://ieeexplore.ieee.org/abstract/document/9473532)," 2021 IEEE International Conference on Communications Workshops (ICC Workshops), 2021, pp. 1-7, doi: 10.1109/ICCWorkshops50388.2021.9473532.
 - Noriyuki HASHIMOTO, et al., "[*Channel Estimation and Equalization for CP-OFDM-based OTFS in Fractional Doppler Channels*](https://arxiv.org/abs/2010.15396)," arXiv:2010.15396v3 [cs.IT], Jan. 2021.
 
 ## Abstract
